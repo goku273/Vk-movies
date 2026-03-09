@@ -400,7 +400,16 @@ nav {
   <div class="logo" onclick="goHome()"><em>VK </em>MOVIES</div>
   <div class="nav-right">
     <button class="nbtn nbtn-ghost" onclick="goHome()">🎬 Browse</button>
-    <button class="nbtn nbtn-gold" onclick="openAdmin()">🔐 Admin</button>
+    <button class="nbtn nbtn-gold" id="adminBtn" onclick="openAdmin()" style="display:none">🔐 Admin</button>
+    // Secret admin shortcut - Press A+D+M together
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'A' && e.shiftKey && e.ctrlKey) {
+    document.getElementById('adminBtn').style.display === 'none'
+      ? document.getElementById('adminBtn').style.display = 'flex'
+      : document.getElementById('adminBtn').style.display = 'none';
+  }
+});
+    
   </div>
 </nav>
 
