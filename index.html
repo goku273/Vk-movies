@@ -316,7 +316,7 @@ nav {
 .pin-i {
   width:100%; padding:14px; background:var(--bg); border:1px solid var(--border2);
   border-radius:10px; color:var(--text); font-size:24px; font-family:'Cinzel',serif;
-  text-align:center; letter-spacing:10px; outline:none; margin-bottom:14px;
+  text-align:center; letter-spacing:2px; outline:none; margin-bottom:14px;
 }
 .pin-i:focus { border-color:var(--gold); }
 .pin-btn { width:100%; padding:11px; background: linear-gradient(135deg, var(--gold), #8b6914); border:none; border-radius:10px; color:#111; font-family:'Cinzel',serif; font-size:13px; font-weight:700; letter-spacing:2px; cursor:pointer; }
@@ -488,8 +488,8 @@ nav {
       <div id="pinSection">
         <div class="pin-wrap">
           <div class="pin-title">Enter PIN</div>
-          <div class="pin-sub">Admin access only. 4-digit PIN required.</div>
-          <input class="pin-i" id="pinInput" type="password" maxlength="4" placeholder="••••" onkeyup="if(event.key==='Enter')checkPin()">
+          <div class="pin-sub">Admin access only. 10-digit PIN required.</div>
+          <input class="pin-i" id="pinInput" type="password" maxlength="10" placeholder="••••" onkeyup="if(event.key==='Enter')checkPin()">
           <button class="pin-btn" onclick="checkPin()">UNLOCK →</button>
           <div class="pin-err" id="pinErr">❌ Wrong PIN. Try again.</div>
         </div>
@@ -543,7 +543,7 @@ nav {
 <div class="toast" id="toast"></div>
 
 <script>
-const ADMIN_PIN = '33@9';
+const ADMIN_PIN ='Cloud$7890';
 let adminUnlocked = false;
 let currentItem = null;
 
