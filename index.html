@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VK Movies</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111009;
+  --surface: #1c1709;
+  --card: #241e0b;
+  --border: #332a10;
+  --border2: #443a18;
+  --gold: #c8a84b;
+  --gold2: #e6c96a;
+  --gold-dim: #7a6528;
+  --text: #ede0c4;
+  --text2: #9a8860;
+  --text3: #5a4f36;
+  --accent: #ff5e2e;
+  --green: #3dbd7e;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 900;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(17,16,9,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Cinzel', serif; font-size: 18px; font-weight: 900;
+  color: var(--gold); letter-spacing: 2px; text-decoration: none; cursor:pointer;
+}
+.logo em { color: #fff; font-style: normal; }
+.nav-right { display: flex; gap: 8px; }
+.nbtn {
+  padding: 7px 16px; border-radius: 8px; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.25s; letter-spacing: 0.5px;
+}
+.nbtn-gold { background: var(--gold); color: #111; }
+.nbtn-gold:hover { background: var(--gold2); transform: translateY(-1px); }
+.nbtn-ghost { background: transparent; color: var(--gold); border: 1px solid var(--border2); }
+.nbtn-ghost:hover { background: var(--card); }
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200,168,75,0.09) 0%, transparent 70%);
+  border-bottom: 1px solid var(--border);
+}
+.hero-quote { font-size: 13px; letter-spacing: 3px; color: var(--text2); font-style: italic; margin-bottom: 14px; }
+.hero-title {
+  font-family: 'Cinzel', serif; font-size: clamp(36px, 9vw, 68px);
+  font-weight: 900; line-height: 1; color: #fff; margin-bottom: 10px;
+}
+.hero-title span { color: var(--gold); }
+.hero-sub { font-size: 12px; color: var(--text3); letter-spacing: 3px; text-transform: uppercase; }
+
+/* SEARCH */
+.search-wrap { padding: 20px 24px; background: var(--surface); border-bottom: 1px solid var(--border); }
+.search-inner { max-width: 560px; margin: 0 auto; display: flex; gap: 8px; }
+.s-input {
+  flex:1; padding: 11px 16px;
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: 10px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none;
+  transition: border-color 0.2s;
+}
+.s-input:focus { border-color: var(--gold); }
+.s-input::placeholder { color: var(--text3); }
+.s-btn {
+  padding: 11px 22px; background: var(--gold); border: none;
+  border-radius: 10px; color: #111; font-weight: 700; font-size: 13px;
+  cursor: pointer; transition: all 0.2s;
+}
+.s-btn:hover { background: var(--gold2); }
+
+/* MAIN */
+.main { max-width: 860px; margin: 0 auto; padding: 32px 20px 60px; }
+
+/* SECTION TITLE */
+.sec-title {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 4px;
+  color: var(--text3); text-transform: uppercase; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* RECENTLY ADDED STRIP */
+.recent-strip {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(255,94,46,0.12), rgba(255,94,46,0.04));
+  border: 1px solid rgba(255,94,46,0.25);
+  border-radius: 14px; cursor: pointer; transition: all 0.25s; margin-bottom: 32px;
+}
+.recent-strip:hover { background: linear-gradient(135deg, rgba(255,94,46,0.2), rgba(255,94,46,0.08)); transform: translateX(4px); }
+.pulse { width: 9px; height: 9px; background: var(--accent); border-radius: 50%; flex-shrink: 0; animation: pulse 1.4s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,94,46,0.5)} 50%{opacity:0.7;box-shadow:0 0 0 7px rgba(255,94,46,0)} }
+.recent-label { font-size: 14px; font-weight: 700; color: var(--accent); }
+.recent-sub { font-size: 11px; color: var(--text3); }
+.recent-arrow { margin-left: auto; color: var(--accent); font-size: 20px; }
+
+/* FOLDERS GRID */
+.folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+/* FOLDER CARD */
+.folder {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  transition: all 0.25s;
+}
+.folder:hover { box-shadow: 0 8px 28px rgba(200,168,75,0.1); }
+.folder.open { border-color: var(--gold-dim); }
+
+.folder-header {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: none;
+}
+.folder-header:hover { background: rgba(200,168,75,0.05); }
+
+.folder-icon-wrap { position: relative; flex-shrink: 0; }
+.f-svg { width: 50px; height: 42px; }
+.f-emoji {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -48%);
+  font-size: 17px; line-height: 1;
+}
+.folder-name {
+  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+  color: var(--text); margin-bottom: 4px;
+}
+.folder-count-row { display: flex; align-items: center; gap: 6px; }
+.f-count-badge {
+  background: rgba(200,168,75,0.15); border: 1px solid rgba(200,168,75,0.25);
+  color: var(--gold); font-size: 10px; font-weight: 800;
+  padding: 2px 8px; border-radius: 20px;
+}
+.f-count-label { font-size: 11px; color: var(--text3); }
+.folder-arrow {
+  margin-left: auto; color: var(--text3); font-size: 18px; font-weight: 300;
+  transition: transform 0.3s, color 0.2s;
+}
+.folder.open .folder-arrow { transform: rotate(90deg); color: var(--gold); }
+
+/* FOLDER BODY */
+.folder-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+  border-top: 0px solid transparent;
+}
+.folder.open .folder-body {
+  max-height: 3000px;
+  border-top: 1px solid var(--border);
+}
+
+.folder-empty {
+  padding: 18px 20px;
+  font-size: 12px; color: var(--text3); text-align: center;
+}
+
+/* FILE ROW */
+.file-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.15s;
+}
+.file-row:last-child { border-bottom: none; }
+.file-row:hover { background: rgba(200,168,75,0.06); }
+
+.f-num { font-size: 11px; color: var(--text3); min-width: 20px; text-align: right; font-family: 'Cinzel', serif; font-weight: 600; }
+.f-thumb {
+  width: 38px; height: 38px; border-radius: 7px;
+  overflow: hidden; flex-shrink: 0;
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center; font-size: 17px;
+}
+.f-thumb img { width:100%; height:100%; object-fit:cover; }
+.f-info { flex:1; min-width:0; }
+.f-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+.f-meta { font-size: 10px; color: var(--text3); display: flex; gap: 8px; align-items: center; }
+.f-new { background: var(--accent); color: #fff; font-size: 8px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 1px; }
+.f-dl {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px;
+  background: rgba(61,189,126,0.1); border: 1px solid rgba(61,189,126,0.2);
+  border-radius: 20px; color: var(--green); font-size: 10px; font-weight: 700; flex-shrink: 0;
+  transition: all 0.2s;
+}
+.file-row:hover .f-dl { background: rgba(61,189,126,0.18); }
+
+/* PLAIN LIST (search/recent) */
+.plain-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; margin-bottom: 8px;
+  cursor: pointer; transition: all 0.2s;
+}
+.plain-row:hover { border-color: var(--gold-dim); background: rgba(200,168,75,0.04); }
+.plain-thumb {
+  width: 40px; height: 40px; border-radius: 8px; overflow: hidden; flex-shrink: 0;
+  background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.plain-thumb img { width:100%; height:100%; object-fit:cover; }
+.plain-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plain-meta { font-size: 10px; color: var(--text3); }
+.cat-chip {
+  font-size: 10px; color: var(--text2);
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 3px 9px; border-radius: 20px; flex-shrink: 0;
+}
+
+/* BACK BTN */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text2); font-size: 13px; cursor: pointer;
+  margin-bottom: 22px; transition: all 0.2s;
+}
+.back-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* MODALS */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.82); z-index: 2000;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.overlay.show { display: flex; }
+.modal {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 18px; width: 100%; max-width: 460px;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+}
+.modal-head {
+  padding: 20px 22px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-head-title { font-family:'Cinzel',serif; font-size:16px; color:var(--gold); }
+.modal-x { background:none; border:none; color:var(--text2); font-size:18px; cursor:pointer; padding:4px; transition: color 0.2s; }
+.modal-x:hover { color: var(--text); }
+.modal-body { padding: 22px; }
+
+/* DETAIL */
+.d-thumb {
+  width:100%; aspect-ratio:16/9; border-radius:12px; background: var(--card);
+  display:flex; align-items:center; justify-content:center; font-size:56px;
+  margin-bottom:18px; overflow:hidden;
+}
+.d-thumb img { width:100%; height:100%; object-fit:cover; }
+.d-title { font-family:'Cinzel',serif; font-size:19px; color:var(--gold); margin-bottom:10px; }
+.d-tags { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.d-tag { font-size:11px; color:var(--text2); background:var(--card); border:1px solid var(--border); padding:3px 10px; border-radius:20px; }
+.d-desc { font-size:13px; color:var(--text2); line-height:1.7; margin-bottom:20px; }
+.d-dl-btn {
+  width:100%; padding:13px;
+  background: linear-gradient(135deg, #3dbd7e, #2a8a5a);
+  border:none; border-radius:12px; color:#fff;
+  font-family:'Cinzel',serif; font-size:14px; font-weight:700;
+  letter-spacing:2px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  transition: all 0.3s;
+}
+.d-dl-btn:hover { background: linear-gradient(135deg, #4ed48f, #3dbd7e); transform:translateY(-2px); box-shadow:0 8px 20px rgba(61,189,126,0.3); }
+
+/* UPLOAD FORM */
+.form-g { margin-bottom:16px; }
+.form-l { display:block; font-size:11px; font-weight:700; letter-spacing:1.5px; color:var(--gold); margin-bottom:7px; text-transform:uppercase; }
+.form-i, .form-s {
+  width:100%; padding:10px 14px; background:var(--bg); border:1px solid var(--border2);
+  border-radius:9px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; outline:none; transition: border-color 0.2s;
+}
+.form-i:focus,.form-s:focus { border-color:var(--gold); }
+.form-s option { background:var(--surface); }
+.up-btn {
+  width:100%; padding:12px; background: linear-gradient(135deg, var(--gold), #8b6914);
+  border:none; border-radius:10px; color:#111;
+  font-family:'Cinzel',serif; font-size:13px; font-weight:700;
+  letter-spacing:2px; cursor:pointer; transition: all 0.3s; margin-top:4px;
+}
+.up-btn:hover { background: linear-gradient(135deg, var(--gold2), var(--gold)); transform:translateY(-1px); }
+
+/* PIN */
+.pin-wrap { text-align:center; padding:10px 0 4px; }
+.pin-title { font-family:'Cinzel',serif; font-size:18px; color:var(--gold); margin-bottom:6px; }
+.pin-sub { font-size:12px; color:var(--text3); margin-bottom:22px; }
+.pin-i {
+  width:100%; padding:14px; background:var(--bg); border:1px solid var(--border2);
+  border-radius:10px; color:var(--text); font-size:24px; font-family:'Cinzel',serif;
+  text-align:center; letter-spacing:10px; outline:none; margin-bottom:14px;
+}
+.pin-i:focus { border-color:var(--gold); }
+.pin-btn { width:100%; padding:11px; background: linear-gradient(135deg, var(--gold), #8b6914); border:none; border-radius:10px; color:#111; font-family:'Cinzel',serif; font-size:13px; font-weight:700; letter-spacing:2px; cursor:pointer; }
+.pin-err { color:#ff4757; font-size:12px; margin-top:10px; display:none; }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:28px; right:28px;
+  background:var(--green); color:#fff; padding:11px 20px; border-radius:10px;
+  font-size:13px; font-weight:700; z-index:9999;
+  transform:translateY(80px); opacity:0; transition:all 0.35s; pointer-events:none;
+}
+.toast.show { transform:translateY(0); opacity:1; }
+
+/* DELETE BTN */
+.d-del-btn {
+  width:100%; padding:11px;
+  background: transparent;
+  border: 1px solid rgba(255,60,60,0.35);
+  border-radius:12px; color:#ff5555;
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700;
+  cursor:pointer; margin-top:10px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  transition: all 0.25s;
+}
+.d-del-btn:hover { background: rgba(255,60,60,0.12); border-color:#ff5555; }
+
+/* CONFIRM DELETE */
+.confirm-box {
+  background: rgba(255,60,60,0.08);
+  border: 1px solid rgba(255,60,60,0.3);
+  border-radius: 10px; padding: 14px 16px;
+  margin-top: 10px; display:none;
+}
+.confirm-box.show { display:block; }
+.confirm-text { font-size:13px; color:#ff8888; margin-bottom:12px; text-align:center; }
+.confirm-btns { display:flex; gap:8px; }
+.confirm-yes {
+  flex:1; padding:9px; background:#ff4444; border:none; border-radius:8px;
+  color:#fff; font-weight:700; font-size:13px; cursor:pointer; transition:all 0.2s;
+}
+.confirm-yes:hover { background:#ff2222; }
+.confirm-no {
+  flex:1; padding:9px; background:var(--card); border:1px solid var(--border);
+  border-radius:8px; color:var(--text2); font-size:13px; cursor:pointer; transition:all 0.2s;
+}
+.confirm-no:hover { background:var(--border); }
+
+/* UPLOAD TYPE TOGGLE */
+.upload-type-row {
+  display:flex; gap:8px; margin-bottom:16px;
+}
+.type-btn {
+  flex:1; padding:9px 12px;
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius:8px; color:var(--text2);
+  font-family:'DM Sans',sans-serif; font-size:12px; font-weight:700;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
+}
+.type-btn.active {
+  background: rgba(200,168,75,0.15);
+  border-color: var(--gold); color:var(--gold);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:10px; }
+
+@media(max-width:500px){
+  .folders-grid { grid-template-columns: 1fr; }
+  nav { padding: 0 14px; }
+  .main { padding: 22px 12px 50px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="goHome()"><em>VK </em>MOVIES</div>
+  <div class="nav-right">
+    <button class="nbtn nbtn-ghost" onclick="goHome()">🎬 Browse</button>
+    <button class="nbtn nbtn-gold" onclick="openAdmin()">🔐 Admin</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-quote">"Movies touch our hearts and awaken our vision"</div>
+  <div class="hero-title"><em>VK </em><span>Movies</span></div>
+  <div class="hero-sub">Your Private Collection &bull; Friends Only</div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-inner">
+    <input class="s-input" id="searchInput" type="text" placeholder="🔍  Search movies, songs, books..." oninput="onSearch()">
+    <button class="s-btn" onclick="onSearch()">Search</button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- HOME PAGE -->
+  <div id="homePage">
+    <div class="recent-strip" onclick="goRecent()">
+      <div class="pulse"></div>
+      <div>
+        <div class="recent-label">🔥 Recently Added</div>
+        <div class="recent-sub">Uploaded in the last 24 hours</div>
+      </div>
+      <div class="recent-arrow">›</div>
+    </div>
+    <div class="sec-title">Your Collection</div>
+    <div class="folders-grid" id="foldersGrid"></div>
+  </div>
+
+  <!-- RECENT PAGE -->
+  <div id="recentPage" style="display:none">
+    <div class="back-btn" onclick="goHome()">‹ &nbsp;Back to Collection</div>
+    <div class="sec-title">Recently Added — Last 24 Hours</div>
+    <div id="recentList"></div>
+  </div>
+
+  <!-- SEARCH PAGE -->
+  <div id="searchPage" style="display:none">
+    <div class="back-btn" onclick="goHome()">‹ &nbsp;Back to Collection</div>
+    <div class="sec-title">Search Results</div>
+    <div id="searchResults"></div>
+  </div>
+
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-head-title" id="dModalTitle"></span>
+      <button class="modal-x" onclick="closeModal('detailModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="d-thumb" id="dThumb"></div>
+      <div class="d-title" id="dTitle"></div>
+      <div class="d-tags" id="dTags"></div>
+      <div class="d-desc" id="dDesc"></div>
+      <button class="d-dl-btn" id="dDlBtn" onclick="doDownload()">⬇ Download</button>
+      <button class="d-del-btn" id="dDelBtn" onclick="showConfirm()" style="display:none">🗑 Remove from Collection</button>
+      <div class="confirm-box" id="confirmBox">
+        <div class="confirm-text">⚠️ Delete "<span id="confirmTitle"></span>" permanently?</div>
+        <div class="confirm-btns">
+          <button class="confirm-yes" onclick="doDelete()">Yes, Delete</button>
+          <button class="confirm-no" onclick="hideConfirm()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="overlay" id="adminModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-head-title">🔐 Admin Upload</span>
+      <button class="modal-x" onclick="closeModal('adminModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="pinSection">
+        <div class="pin-wrap">
+          <div class="pin-title">Enter PIN</div>
+          <div class="pin-sub">Admin access only. 4-digit PIN required.</div>
+          <input class="pin-i" id="pinInput" type="password" maxlength="4" placeholder="••••" onkeyup="if(event.key==='Enter')checkPin()">
+          <button class="pin-btn" onclick="checkPin()">UNLOCK →</button>
+          <div class="pin-err" id="pinErr">❌ Wrong PIN. Try again.</div>
+        </div>
+      </div>
+      <div id="uploadSection" style="display:none">
+        <div class="form-g">
+          <label class="form-l">Title</label>
+          <input class="form-i" id="upTitle" type="text" placeholder="Movie / Series / Song / Book title">
+        </div>
+        <div class="form-g">
+          <label class="form-l">Category</label>
+          <select class="form-s" id="upCat">
+            <option value="fav-movies">⭐ Favourite Movies</option>
+            <option value="fav-series">📺 Favourite Series</option>
+            <option value="fav-songs">🎵 Favourite Songs</option>
+            <option value="korean">🇰🇷 Korean Movies</option>
+            <option value="malayalam">🌴 Favourite Malayalam Movies</option>
+            <option value="books">📚 Favourite Books (PDF)</option>
+          </select>
+        </div>
+        <div class="form-g">
+          <label class="form-l">Year / Info</label>
+          <input class="form-i" id="upYear" type="text" placeholder="2024 / Genre / Language">
+        </div>
+        <div class="form-g">
+          <label class="form-l">Description</label>
+          <input class="form-i" id="upDesc" type="text" placeholder="Short description...">
+        </div>
+
+        <div class="form-g">
+          <label class="form-l">Download / Link Type</label>
+          <div class="upload-type-row">
+            <button class="type-btn active" id="typeBtnDrive" onclick="setUploadType('drive')">☁️ Google Drive Link</button>
+            <button class="type-btn" id="typeBtnSite" onclick="setUploadType('site')">🌐 Movie Website URL</button>
+          </div>
+          <input class="form-i" id="upLink" type="text" placeholder="https://drive.google.com/...">
+          <div id="upLinkHint" style="font-size:11px;color:var(--text3);margin-top:6px;">Paste your Google Drive share link here</div>
+        </div>
+
+        <div class="form-g">
+          <label class="form-l">Thumbnail URL (optional)</label>
+          <input class="form-i" id="upThumb" type="text" placeholder="https://image.jpg">
+        </div>
+        <button class="up-btn" onclick="doUpload()">⬆ UPLOAD</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMIN_PIN = '1234';
+let adminUnlocked = false;
+let currentItem = null;
+
+const CATS = [
+  { id:'fav-movies',  icon:'⭐', label:'Favourite Movies',          color:'#c8a84b' },
+  { id:'fav-series',  icon:'📺', label:'Favourite Series',          color:'#6fa3cb' },
+  { id:'fav-songs',   icon:'🎵', label:'Favourite Songs',           color:'#c87eb0' },
+  { id:'korean',      icon:'🇰🇷', label:'Korean Movies',             color:'#cb7070' },
+  { id:'malayalam',   icon:'🌴', label:'Favourite Malayalam Movies', color:'#6fcb8a' },
+  { id:'books',       icon:'📚', label:'Favourite Books (PDF)',      color:'#c8a06b' },
+];
+
+function load() { try { return JSON.parse(localStorage.getItem('vkm2') || '[]'); } catch { return []; } }
+function save(d) { localStorage.setItem('vkm2', JSON.stringify(d)); }
+
+// Pages
+function goHome() {
+  document.getElementById('homePage').style.display = '';
+  document.getElementById('recentPage').style.display = 'none';
+  document.getElementById('searchPage').style.display = 'none';
+  document.getElementById('searchInput').value = '';
+  renderFolders();
+}
+function goRecent() {
+  document.getElementById('homePage').style.display = 'none';
+  document.getElementById('recentPage').style.display = '';
+  document.getElementById('searchPage').style.display = 'none';
+  renderRecent();
+}
+function goSearch() {
+  document.getElementById('homePage').style.display = 'none';
+  document.getElementById('recentPage').style.display = 'none';
+  document.getElementById('searchPage').style.display = '';
+}
+
+// Folder SVG
+function fSvg(color) {
+  return `<svg class="f-svg" viewBox="0 0 50 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 9C2 7 3.34 5.5 5 5.5H18L22.5 11H45C46.66 11 48 12.5 48 14.5V37C48 39 46.66 40.5 45 40.5H5C3.34 40.5 2 39 2 37V9Z" fill="${color}" fill-opacity="0.18" stroke="${color}" stroke-opacity="0.6" stroke-width="1.4"/>
+    <path d="M2 15.5H48V37C48 39 46.66 40.5 45 40.5H5C3.34 40.5 2 39 2 37V15.5Z" fill="${color}" fill-opacity="0.10"/>
+  </svg>`;
+}
+
+// Render Folders
+function renderFolders() {
+  const data = load();
+  const grid = document.getElementById('foldersGrid');
+
+  grid.innerHTML = CATS.map(cat => {
+    const items = data.filter(d => d.category === cat.id);
+    const count = items.length;
+    const filesHtml = count === 0
+      ? `<div class="folder-empty">Empty folder — use Admin Upload to add content.</div>`
+      : items.map((item, i) => {
+          const globalIdx = data.indexOf(item);
+          return fileRowHtml(item, i, globalIdx);
+        }).join('');
+
+    return `
+      <div class="folder" id="folder-${cat.id}">
+        <div class="folder-header" onclick="toggleFolder('${cat.id}')">
+          <div class="folder-icon-wrap">
+            ${fSvg(cat.color)}
+            <div class="f-emoji">${cat.icon}</div>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div class="folder-name">${cat.label}</div>
+            <div class="folder-count-row">
+              <span class="f-count-badge">${count}</span>
+              <span class="f-count-label">${count === 1 ? 'item' : 'items'}</span>
+            </div>
+          </div>
+          <div class="folder-arrow">›</div>
+        </div>
+        <div class="folder-body" id="fb-${cat.id}">
+          ${filesHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function fileRowHtml(item, i, globalIdx) {
+  const isNew = item.uploadedAt && item.uploadedAt > Date.now() - 86400000;
+  const cat = CATS.find(c => c.id === item.category) || { icon:'🎬' };
+  return `
+    <div class="file-row" onclick="openDetail(event, ${globalIdx})">
+      <span class="f-num">${i+1}</span>
+      <div class="f-thumb">
+        ${item.thumbnail
+          ? `<img src="${item.thumbnail}" onerror="this.outerHTML='<span>${cat.icon}</span>'">`
+          : cat.icon}
+      </div>
+      <div class="f-info">
+        <div class="f-name">${item.title}</div>
+        <div class="f-meta">
+          ${item.year ? `<span>${item.year}</span>` : ''}
+          ${isNew ? `<span class="f-new">NEW</span>` : ''}
+        </div>
+      </div>
+      ${item.link ? `<div class="f-dl">⬇ Download</div>` : ''}
+    </div>
+  `;
+}
+
+function toggleFolder(catId) {
+  const folder = document.getElementById('folder-' + catId);
+  folder.classList.toggle('open');
+}
+
+// Recent
+function renderRecent() {
+  const data = load();
+  const cutoff = Date.now() - 86400000;
+  const recent = data.filter(d => d.uploadedAt && d.uploadedAt > cutoff);
+  const el = document.getElementById('recentList');
+  if (recent.length === 0) {
+    el.innerHTML = `<div style="text-align:center;padding:50px;color:var(--text3)"><div style="font-size:40px;margin-bottom:12px">⏰</div><div style="font-size:14px">Nothing uploaded in the last 24 hours.</div></div>`;
+    return;
+  }
+  el.innerHTML = recent.map(item => plainRowHtml(item, data.indexOf(item))).join('');
+}
+
+// Search
+function onSearch() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (!q) { goHome(); return; }
+  goSearch();
+  const data = load();
+  const results = data.filter(d =>
+    d.title.toLowerCase().includes(q) ||
+    (d.desc && d.desc.toLowerCase().includes(q)) ||
+    (d.year && d.year.toLowerCase().includes(q))
+  );
+  const el = document.getElementById('searchResults');
+  if (results.length === 0) {
+    el.innerHTML = `<div style="text-align:center;padding:50px;color:var(--text3)"><div style="font-size:40px;margin-bottom:12px">🔍</div><div>No results for "<strong style="color:var(--text2)">${q}</strong>"</div></div>`;
+    return;
+  }
+  el.innerHTML = results.map(item => plainRowHtml(item, data.indexOf(item))).join('');
+}
+
+function plainRowHtml(item, globalIdx) {
+  const cat = CATS.find(c => c.id === item.category) || { icon:'🎬', label:'' };
+  return `
+    <div class="plain-row" onclick="openDetail(event, ${globalIdx})">
+      <div class="plain-thumb">
+        ${item.thumbnail ? `<img src="${item.thumbnail}" onerror="this.outerHTML='<span>${cat.icon}</span>'">` : cat.icon}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div class="plain-name">${item.title}</div>
+        <div class="plain-meta">${item.year || ''}</div>
+      </div>
+      <span class="cat-chip">${cat.icon} ${cat.label}</span>
+      ${item.link ? `<div class="f-dl" style="margin-left:8px">⬇</div>` : ''}
+    </div>
+  `;
+}
+
+// Detail
+function openDetail(e, idx) {
+  e.stopPropagation();
+  const data = load();
+  const item = data[idx];
+  if (!item) return;
+  currentItem = item;
+  currentItem._idx = idx;
+  const cat = CATS.find(c => c.id === item.category) || { icon:'🎬', label:'' };
+
+  document.getElementById('dModalTitle').textContent = item.title;
+  document.getElementById('dTitle').textContent = item.title;
+  document.getElementById('dDesc').textContent = item.desc || 'No description available.';
+  document.getElementById('confirmTitle').textContent = item.title;
+
+  const thumb = document.getElementById('dThumb');
+  thumb.innerHTML = item.thumbnail
+    ? `<img src="${item.thumbnail}" onerror="this.outerHTML='<span style=\\'font-size:56px\\'>${cat.icon}</span>'">`
+    : `<span style="font-size:56px">${cat.icon}</span>`;
+
+  document.getElementById('dTags').innerHTML = `
+    <span class="d-tag">${cat.icon} ${cat.label}</span>
+    ${item.year ? `<span class="d-tag">📅 ${item.year}</span>` : ''}
+    ${item.link ? `<span class="d-tag" style="color:var(--green)">✅ Available</span>` : ''}
+    ${item.linkType === 'site' ? `<span class="d-tag">🌐 Stream/Watch</span>` : ''}
+  `;
+
+  const dlBtn = document.getElementById('dDlBtn');
+  const delBtn = document.getElementById('dDelBtn');
+  hideConfirm();
+
+  if (item.link) {
+    dlBtn.style.display = 'flex';
+    if (item.linkType === 'site') {
+      dlBtn.innerHTML = '🌐 Open / Watch Online';
+    } else if (item.category === 'books') {
+      dlBtn.innerHTML = '📖 Open / Download PDF';
+    } else {
+      dlBtn.innerHTML = '⬇ Download';
+    }
+  } else {
+    dlBtn.style.display = 'none';
+  }
+
+  // Show delete button only if admin is unlocked
+  delBtn.style.display = adminUnlocked ? 'flex' : 'none';
+
+  openModal('detailModal');
+}
+
+function doDownload() { if (currentItem?.link) window.open(currentItem.link, '_blank'); }
+
+function showConfirm() {
+  document.getElementById('confirmBox').classList.add('show');
+}
+function hideConfirm() {
+  document.getElementById('confirmBox').classList.remove('show');
+}
+function doDelete() {
+  if (!currentItem) return;
+  const data = load();
+  const idx = data.findIndex(d => d.title === currentItem.title && d.uploadedAt === currentItem.uploadedAt);
+  if (idx !== -1) { data.splice(idx, 1); save(data); }
+  closeModal('detailModal');
+  renderFolders();
+  showToast('🗑 "' + currentItem.title + '" removed!');
+  currentItem = null;
+}
+
+// Upload type toggle
+let currentUploadType = 'drive';
+function setUploadType(type) {
+  currentUploadType = type;
+  document.getElementById('typeBtnDrive').classList.toggle('active', type === 'drive');
+  document.getElementById('typeBtnSite').classList.toggle('active', type === 'site');
+  const input = document.getElementById('upLink');
+  const hint = document.getElementById('upLinkHint');
+  if (type === 'drive') {
+    input.placeholder = 'https://drive.google.com/file/d/...';
+    hint.textContent = 'Paste your Google Drive share link here';
+  } else {
+    input.placeholder = 'https://tamilrockers.com/... or any movie site';
+    hint.textContent = 'Paste the movie/streaming website URL here';
+  }
+}
+
+// Admin
+function openAdmin() {
+  document.getElementById('pinSection').style.display = adminUnlocked ? 'none' : 'block';
+  document.getElementById('uploadSection').style.display = adminUnlocked ? 'block' : 'none';
+  document.getElementById('pinInput').value = '';
+  document.getElementById('pinErr').style.display = 'none';
+  openModal('adminModal');
+}
+
+function checkPin() {
+  if (document.getElementById('pinInput').value === ADMIN_PIN) {
+    adminUnlocked = true;
+    document.getElementById('pinSection').style.display = 'none';
+    document.getElementById('uploadSection').style.display = 'block';
+  } else {
+    document.getElementById('pinErr').style.display = 'block';
+    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').focus();
+  }
+}
+
+function doUpload() {
+  const title = document.getElementById('upTitle').value.trim();
+  const category = document.getElementById('upCat').value;
+  const year = document.getElementById('upYear').value.trim();
+  const desc = document.getElementById('upDesc').value.trim();
+  const link = document.getElementById('upLink').value.trim();
+  const thumb = document.getElementById('upThumb').value.trim();
+  if (!title) { showToast('❗ Enter a title!'); return; }
+  const data = load();
+  data.unshift({ title, category, year, desc, link, linkType: currentUploadType, thumbnail: thumb, uploadedAt: Date.now() });
+  save(data);
+  ['upTitle','upYear','upDesc','upLink','upThumb'].forEach(id => document.getElementById(id).value = '');
+  closeModal('adminModal');
+  renderFolders();
+  showToast('✅ "' + title + '" added!');
+}
+
+// Modals
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', function(e) { if(e.target===this) closeModal(this.id); });
+});
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Init
+renderFolders();
+</script>
+</body>
+</html>
